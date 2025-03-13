@@ -1,3 +1,84 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Calendar Styles */
+.calendar-container {
+  background: #1A2537;
+}
+
+.calendar-title {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.calendar-wrapper {
+  border-radius: 0px;
+  background: none;
+}
+
+.calendar-header {
+  gap: 0;
+}
+
+.calendar-header-cell {
+  background: #1F2A3C;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  color: #526B7A;
+  text-align: right;
+  padding-right: 8px;
+  border-bottom: 2px solid #313E54;
+}
+
+.calendar-cell {
+  min-height: 134px;
+  border-radius: 0px;
+  border-color: #1A2537;
+  border-bottom: 2px solid #313E54;
+}
+
+.calendar-cell:hover {
+  --tw-bg-opacity: 1;
+  background-color: #313E54;
+}
+
+.calendar-cell-date {
+  --tw-text-opacity: 1;
+  color: rgba(255, 255, 255, 0.6);
+  float: right;
+  font-weight: 400;
+}
+
+.calendar-cell-today {
+  background: none;
+  border-radius: 0px;
+  border-bottom: 2px solid #313E54;
+}
+
+.calendar-cell-sales-container {
+  margin-top: 1.5rem;
+}
+
+.calendar-cell-sales-positive {
+  background: rgba(54, 199, 108, 0.2);
+  color: #36C76C;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 8px;
+  font-size: 12px;
+  line-height: 20px;
+  border-left: 2px solid #36C76C;
+  border-radius: 4px 40px 40px 4px;
+}
+
+.calendar-cell-sales-negative {
+  background: rgba(255, 102, 146, 0.2);
+  color: #FF6692;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 8px;
+  font-size: 12px;
+  line-height: 20px;
+  border-left: 2px solid #FF6692;
+  border-radius: 4px 40px 40px 4px;
+}

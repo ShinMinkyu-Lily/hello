@@ -706,12 +706,12 @@ function App() {
               )}
 
               {dashboardTab === '매출달력' && (
-                <div>
-                  <h1 className="text-2xl font-medium mb-6">매출달력</h1>
-                  <div className="bg-white rounded-lg shadow p-6">
-                    <div className="grid grid-cols-7 gap-4">
+                <div className="flex-1 p-6 calendar-container">
+                  <h1 className="text-2xl font-medium mb-6 calendar-title">매출달력</h1>
+                  <div className="bg-white rounded-lg shadow p-6 calendar-wrapper">
+                    <div className="grid grid-cols-7 gap-4 calendar-header">
                       {['일', '월', '화', '수', '목', '금', '토'].map(day => (
-                        <div key={day} className="text-center font-medium text-gray-500">
+                        <div key={day} className="calendar-header-cell">
                           {day}
                         </div>
                       ))}
@@ -725,15 +725,15 @@ function App() {
                           return orderDate.toDateString() === date.toDateString();
                         });
                         
-                        const daySales = dayOrders.reduce((sum, order) => 
+                        const daySales =dayOrders.reduce((sum, order) => 
                           sum + (order.isExpense ? order.finalAmount : order.finalAmount), 0
                         );
                          
                         return (
                           <div
                             key={index}
-                            className={`p-2 border rounded-lg cursor-pointer ${
-                              isToday ? 'bg-blue-50 border-blue-200' : 'hover:bg-gray-50'
+                            className={`calendar-cell cursor-pointer ${
+                              isToday ? 'calendar-cell-today' : ''
                             }`}
                             onClick={() => {
                               if (dayOrders.length > 0) {
@@ -742,10 +742,14 @@ function App() {
                               }
                             }}
                           >
-                            <div className="text-sm text-gray-500">{date.getDate()}</div>
+                            <div className="calendar-cell-date">{date.getDate()}</div>
                             {dayOrders.length > 0 && (
-                              <div className="space-y-1 mt-1">
-                                <div className={`text-xs font-medium ${daySales >= 0 ? 'text-blue-600' : 'text-red-500'}`}>
+                              <div className="calendar-cell-sales-container">
+                                <div className={
+                                  daySales >= 0 
+                                    ? 'calendar-cell-sales-positive'
+                                    : 'calendar-cell-sales-negative'
+                                }>
                                   {daySales.toLocaleString()}원
                                 </div>
                               </div>
