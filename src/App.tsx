@@ -733,7 +733,7 @@ function App() {
                         const dayOtherExpenses = dayOrders
                           .filter(order => order.isExpense)
                           .reduce((sum, order) => sum + order.finalAmount, 0);
-                        const dayProfit = daySales - dayPurchases - dayOtherExpenses;
+                        const dayProfit = daySales - dayPurchases + dayOtherExpenses; // 수정된 부분
 
                         return (
                           <div
