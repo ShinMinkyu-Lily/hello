@@ -719,22 +719,26 @@ function App() {
                         const date = new Date();
                         date.setDate(date.getDate() - 15 + index);
                         const isToday = date.toDateString() === new Date().toDateString();
-                        
+
                         const dayOrders = completedOrders.filter(order => {
                           const orderDate = new Date(order.timestamp);
                           return orderDate.toDateString() === date.toDateString();
                         });
-                        
-                        const daySales =dayOrders.reduce((sum, order) => 
-                          sum + (order.isExpense ? order.finalAmount : order.finalAmount), 0
-                        );
-                         
+
+                        const daySales = dayOrders
+                          .filter(order => !order.isExpense)
+                          .reduce((sum, order) => sum + order.finalAmount, 0);
+
+                        const dayPurchases = daySales * 0.2; // 사입 금액 (매출의 20%)
+                        const dayOtherExpenses = dayOrders
+                          .filter(order => order.isExpense)
+                          .reduce((sum, order) => sum + order.finalAmount, 0);
+                        const dayProfit = daySales - dayPurchases - dayOtherExpenses;
+
                         return (
                           <div
                             key={index}
-                            className={`calendar-cell cursor-pointer ${
-                              isToday ? 'calendar-cell-today' : ''
-                            }`}
+                            className={`calendar-cell cursor-pointer ${isToday ? 'calendar-cell-today' : ''}`}
                             onClick={() => {
                               if (dayOrders.length > 0) {
                                 setSelectedDate(date);
@@ -745,12 +749,17 @@ function App() {
                             <div className="calendar-cell-date">{date.getDate()}</div>
                             {dayOrders.length > 0 && (
                               <div className="calendar-cell-sales-container">
-                                <div className={
-                                  daySales >= 0 
-                                    ? 'calendar-cell-sales-positive'
-                                    : 'calendar-cell-sales-negative'
-                                }>
+                                <div className="calendar-cell-sales-positive">
                                   {daySales.toLocaleString()}원
+                                </div>
+                                <div className="calendar-cell-sales-purple">
+                                  {dayPurchases.toLocaleString()}원
+                                </div>
+                                <div className="calendar-cell-sales-negative">
+                                  {dayOtherExpenses.toLocaleString()}원
+                                </div>
+                                <div className="calendar-cell-sales-yellow">
+                                  {dayProfit.toLocaleString()}원
                                 </div>
                               </div>
                             )}
@@ -1202,3 +1211,4 @@ function App() {
 }
 
 export default App;
+
