@@ -603,7 +603,7 @@ function App() {
             </div>
 
             {/* Main content area */}
-            <div className="flex-1 p-6">
+            <div className={`flex-1 p-6 ${dashboardTab === '매출달력' ? 'calendar-container' : ''}`}>
               {dashboardTab === '매출현황' && (
                 <div>
                   <h1 className="text-2xl font-medium mb-6">매출현황</h1>
@@ -706,7 +706,7 @@ function App() {
               )}
 
               {dashboardTab === '매출달력' && (
-                <div className="flex-1 p-6 calendar-container">
+                <div className="flex-1 p-6">
                   <h1 className="text-2xl font-medium mb-6 calendar-title">매출달력</h1>
                   <div className="bg-white rounded-lg shadow p-6 calendar-wrapper">
                     <div className="grid grid-cols-7 gap-4 calendar-header">
