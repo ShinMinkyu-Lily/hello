@@ -723,57 +723,80 @@ function App() {
                           {day}
                         </div>
                       ))}
-                      {Array.from({ length: 35 }).map((_, index) => {
-                        const date = new Date();
-                        date.setDate(date.getDate() - 15 + index);
-                        const isToday = date.toDateString() === new Date().toDateString();
-
-                        const dayOrders = completedOrders.filter(order => {
-                          const orderDate = new Date(order.timestamp);
-                          return orderDate.toDateString() === date.toDateString();
+                      {(() => {
+                        const today = new Date();
+                        const year = today.getFullYear();
+                        const month = today.getMonth();
+                        const firstDayOfMonth = new Date(year, month, 1);
+                        const lastDayOfMonth = new Date(year, month + 1, 0);
+                        const firstDayOfWeek = firstDayOfMonth.getDay();
+                        const daysInMonth = lastDayOfMonth.getDate();
+                        const daysArray = [];
+              
+                        // 빈 셀 추가
+                        for (let i = 0; i < firstDayOfWeek; i++) {
+                          daysArray.push(null);
+                        }
+              
+                        // 날짜 추가
+                        for (let i = 1; i <= daysInMonth; i++) {
+                          daysArray.push(new Date(year, month, i));
+                        }
+              
+                        return daysArray.map((date, index) => {
+                          if (!date) {
+                            return <div key={`empty-${index}`} className="calendar-cell"></div>; // 빈 셀 렌더링
+                          }
+              
+                          const isToday = date.toDateString() === today.toDateString();
+              
+                          const dayOrders = completedOrders.filter(order => {
+                            const orderDate = new Date(order.timestamp);
+                            return orderDate.toDateString() === date.toDateString();
+                          });
+              
+                          const daySales = dayOrders
+                            .filter(order => !order.isExpense)
+                            .reduce((sum, order) => sum + order.finalAmount, 0);
+              
+                          const dayPurchases = daySales * 0.2;
+                          const dayOtherExpenses = dayOrders
+                            .filter(order => order.isExpense)
+                            .reduce((sum, order) => sum + order.finalAmount, 0);
+                          const dayProfit = daySales - dayPurchases + dayOtherExpenses;
+              
+                          return (
+                            <div
+                              key={`date-${index}`}
+                              className={`calendar-cell cursor-pointer ${isToday ? 'calendar-cell-today' : ''}`}
+                              onClick={() => {
+                                if (dayOrders.length > 0) {
+                                  setSelectedDate(date);
+                                  setShowDayDetailsModal(true);
+                                }
+                              }}
+                            >
+                              <div className="calendar-cell-date">{date.getDate()}</div>
+                              {dayOrders.length > 0 && (
+                                <div className="calendar-cell-sales-container">
+                                  <div className="calendar-cell-sales-positive">
+                                    {daySales.toLocaleString()}원
+                                  </div>
+                                  <div className="calendar-cell-sales-purple">
+                                    {dayPurchases.toLocaleString()}원
+                                  </div>
+                                  <div className="calendar-cell-sales-negative">
+                                    {dayOtherExpenses.toLocaleString()}원
+                                  </div>
+                                  <div className="calendar-cell-sales-yellow">
+                                    {dayProfit.toLocaleString()}원
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          );
                         });
-
-                        const daySales = dayOrders
-                          .filter(order => !order.isExpense)
-                          .reduce((sum, order) => sum + order.finalAmount, 0);
-
-                        const dayPurchases = daySales * 0.2; // 사입 금액 (매출의 20%)
-                        const dayOtherExpenses = dayOrders
-                          .filter(order => order.isExpense)
-                          .reduce((sum, order) => sum + order.finalAmount, 0);
-                        const dayProfit = daySales - dayPurchases + dayOtherExpenses; // 수정된 부분
-
-                        return (
-                          <div
-                            key={index}
-                            className={`calendar-cell cursor-pointer ${isToday ? 'calendar-cell-today' : ''}`}
-                            onClick={() => {
-                              if (dayOrders.length > 0) {
-                                setSelectedDate(date);
-                                setShowDayDetailsModal(true);
-                              }
-                            }}
-                          >
-                            <div className="calendar-cell-date">{date.getDate()}</div>
-                            {dayOrders.length > 0 && (
-                              <div className="calendar-cell-sales-container">
-                                <div className="calendar-cell-sales-positive">
-                                  {daySales.toLocaleString()}원
-                                </div>
-                                <div className="calendar-cell-sales-purple">
-                                  {dayPurchases.toLocaleString()}원
-                                </div>
-                                <div className="calendar-cell-sales-negative">
-                                  {dayOtherExpenses.toLocaleString()}원
-                                </div>
-                                <div className="calendar-cell-sales-yellow">
-                                  {dayProfit.toLocaleString()}원
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
+                      })()}
                     </div>
                   </div>
                 </div>
