@@ -82,3 +82,27 @@
   border-left: 2px solid #FF6692;
   border-radius: 4px 40px 40px 4px;
 }
+
+.calendar-cell-sales-yellow {
+  background: rgba(248, 194, 10, 0.2);
+  color: #F8C20A;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 8px;
+  font-size: 12px;
+  line-height: 20px;
+  border-left: 2px solid #F8C20A;
+  border-radius: 4px 40px 40px 4px;
+}
+
+.calendar-cell-sales-purple {
+  background: rgba(99, 91, 255, 0.2);
+  color: #635BFF;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 8px;
+  font-size: 12px;
+  line-height: 20px;
+  border-left: 2px solid #635BFF;
+  border-radius: 4px 40px 40px 4px;
+}
