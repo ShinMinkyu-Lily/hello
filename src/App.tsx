@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { Minus, Plus, Trash2, BarChart2, Calendar, Info, ChevronUp, ChevronDown, X } from 'lucide-react';
@@ -217,15 +217,22 @@ function App() {
   const getHourlySalesData = () => {
     const hourlyData = Array(24).fill(0).map((_, index) => ({
       hour: index,
-      amount: 0
+      amount: 0,
     }));
-
+  
     completedOrders.forEach(order => {
-      const orderHour = new Date(order.timestamp).getHours();
-      const amount = order.isExpense ? order.finalAmount : order.finalAmount;
+      // timestamp를 Date 객체로 변환 (오류 처리 포함)
+      const orderDate = new Date(order.timestamp);
+      if (isNaN(orderDate.getTime())) {
+        return; // 잘못된 timestamp는 건너뜀
+      }
+  
+      const orderHour = orderDate.getHours();
+      // 지출인 경우 amount를 음수로 처리
+      const amount = order.isExpense ? -order.finalAmount : order.finalAmount;
       hourlyData[orderHour].amount += amount;
     });
-
+  
     return hourlyData;
   };
 
@@ -440,7 +447,7 @@ function App() {
             <div className="w-1/4 bg-white border-l flex flex-col">
               {/* Order header */}
               <div className="p-3 border-b flex justify-between items-center bg-gray-50">
-                <span>{format(new Date(), 'PPP', { locale: ko })}</span>
+                <span>{format(new Date(), 'yyyy-MM-dd HH:mm:ss')}</span>
                 <span className="font-bold">{subtotal.toLocaleString()}원</span>
               </div>
 
@@ -652,18 +659,18 @@ function App() {
                               </span>
                             ))}
                           </div>
-                          
+
                           <div className="ml-20 h-full flex items-end">
                             <div className="flex-1 flex items-end justify-between h-64">
                               {getHourlySalesData().map((data, index) => (
                                 <div key={index} className="flex flex-col items-center">
-                                  <div 
+                                  <div
                                     className={`w-8 rounded-sm ${
                                       data.amount >= 0 ? 'bg-blue-500' : 'bg-red-500'
                                     }`}
-                                    style={{ 
+                                    style={{
                                       height: `${Math.abs(data.amount) / 1000000 * 100}%`,
-                                      minHeight: '4px'
+                                      minHeight: '4px',
                                     }}
                                   ></div>
                                   <span className="text-xs text-gray-500 mt-2">{data.hour}시</span>
@@ -704,6 +711,7 @@ function App() {
                   </div>
                 </div>
               )}
+            
 
               {dashboardTab === '매출달력' && (
                 <div className="flex-1 p-6">
