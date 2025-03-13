@@ -440,7 +440,7 @@ function App() {
             <div className="w-1/4 bg-white border-l flex flex-col">
               {/* Order header */}
               <div className="p-3 border-b flex justify-between items-center bg-gray-50">
-                <span>{format(new Date(), 'PPP', { locale: ko })}</span>
+                <span>{format(new Date(), 'yyyy-MM-dd HH:mm:ss')}</span>
                 <span className="font-bold">{subtotal.toLocaleString()}원</span>
               </div>
 
